@@ -14,8 +14,7 @@
    - Linux: /home/USER/.nuke
 
 4. Update or add menu.py
-   - If no menu.py exists in /.nuke, copy menu.py to /.nuke
-   - If menu.py does exists, add the following command to the bottom of the file
+   - Add the following command to the bottom of menu.py in ./nuke, NOT NukeDiscordNotifier/
      ```py
      nuke.pluginAddPath("NukeDiscordNotifier")
      ```
