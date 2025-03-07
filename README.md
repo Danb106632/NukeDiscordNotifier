@@ -18,5 +18,7 @@
      ```py
      nuke.pluginAddPath("NukeDiscordNotifier")
      ```
+5. Join the Discord
+   - https://discord.gg/PvBcWYnuC2
      
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
