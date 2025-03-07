@@ -9,7 +9,7 @@
    ```sh
    git clone https://github.com/Danb106632/NukeDiscordNotifier.git
    ```
-2. Move Dan'sToolkit to your .nuke folder.
+2. Move NukeDiscordNotifier to your .nuke folder.
    - Windows: C:\Users\USER\.nuke
    - Linux: /home/USER/.nuke
 
