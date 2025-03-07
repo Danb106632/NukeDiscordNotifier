@@ -12,12 +12,14 @@ jsonFilePath = jsonDirPath + '/json/DiscordNotifierSettings.json'
 
 
 class DiscordPanel(nukescripts.PythonPanel):
-    def __init__( self ):
+    def __init__( self, userid, webhook ):
         nukescripts.PythonPanel.__init__( self, 'Discord Notifier' )  
         
-        self.useridKnob = nuke.String_Knob('userid', 'Discord User ID:' , '0')
+        self.useridKnob = nuke.String_Knob('userid', 'Discord User ID:' , userid)
+        self.webhookKnob = nuke.String_Knob('webhook', 'Discord Webhook URL:' , webhook)
         
         self.addKnob( self.useridKnob )
+        self.addKnob( self.webhookKnob )
       
 def getUserId(): 
   
@@ -34,9 +36,25 @@ def getUserId():
         
     return int(userId)
 
+def getUserWebhook(): 
+  
+    userId = 'https://discord.com/api/webhooks/'
+       
+    if not os.path.exists(jsonFilePath):
+        createUserIdFile()
+        
+    with open(jsonFilePath, 'r') as file:
+        try:
+            webhook = json.load(file)['webhook']        
+        except json.decoder.JSONDecodeError:
+            nuke.tprint('Discord UserID error')
+        
+    return webhook
+
 def createUserIdFile():
     blank_data = {
-        "userid": 0
+        "userid": 0,
+        "webhook": ""
     }
         
     json_object = json.dumps(blank_data, indent=4)
@@ -45,11 +63,12 @@ def createUserIdFile():
     with open(jsonFilePath, 'w') as file:
         file.write(json_object)   
 
-def writeUserId(userId):
+def writeUserId(userId, webhook):
     with open(jsonFilePath, "w") as file:
     
         data = {
-            "userid": int(userId)
+            "userid": int(userId),
+            "webhook": str(webhook)
         } 
             
         json_object = json.dumps(data, indent=4)
@@ -74,8 +93,14 @@ def notifyUser():
     
     content = "<@%s> %s finished rendering" % (getUserId(), node['name'].getValue())
 
-    webhook = DiscordWebhook(url="https://discord.com/api/webhooks/1347371252351893524/ry4MFyhdo0UGxhJIT-NMlT20MqMYa0jN8uvtl52kWliLyCER9Eo5y0WiKf-myNpLeF8f", content=content)
+    webhook = DiscordWebhook(url=getUserWebhook(), content=content)
     response = webhook.execute()
+    
+    print(response)
+    
+    if response.status_code == '404':
+        nuke.say('Invalid Discord Webhook provided. You weren\'t notified!')
+        
 
 def getKnobs(node):
     indexTab = -1
@@ -108,19 +133,24 @@ def newNode():
 
 def main():
     
-    if len(str(getUserId())) == 18:
+    if len(str(getUserId())) == 18 and getUserWebhook() != 'https://discord.com/api/webhooks/':
         nuke.tprint('Valid Discord User ID provided')
         nuke.addAfterRender(notifyUser)
         return
     
-    Discord_Panel = DiscordPanel()
+    Discord_Panel = DiscordPanel(str(getUserId()), getUserWebhook())
+    Discord_Panel.setMinimumSize(400, 50)
     
     if Discord_Panel.showModalDialog():
         if len(Discord_Panel.useridKnob.value()) != 18:
             nuke.tprint('Invalid Discord User ID provided. Skipping notify...')
             return
         
-        writeUserId(Discord_Panel.useridKnob.value())
+        if Discord_Panel.webhookKnob.value() == 'https://discord.com/api/webhooks/':
+            nuke.tprint('Invalid Discord Webhook provided. Skipping notify...')
+            return
+        
+        writeUserId(Discord_Panel.useridKnob.value(), Discord_Panel.webhookKnob.value())
         nuke.addAfterRender(notifyUser) 
         
     nuke.tprint('No Discord User ID provided. Skipping notify...')
