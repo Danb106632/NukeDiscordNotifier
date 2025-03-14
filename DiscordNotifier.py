@@ -119,7 +119,7 @@ def addSettings(node, indexTab, indexCheckbox):
         node.addKnob(tab)
 
     if indexCheckbox == -1:
-        checkBox = nuke.Boolean_Knob('notifyCheckbox', 'Notify on Discord', True)
+        checkBox = nuke.Boolean_Knob('notifyCheckbox', 'Notify on Discord', False)
         node.addKnob(checkBox)
         
 def newNode():
