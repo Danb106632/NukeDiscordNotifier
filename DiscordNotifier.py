@@ -91,7 +91,7 @@ def notifyUser():
     
     nuke.tprint('Notifiying Discord User ID!')
     
-    content = "<@%s> %s finished rendering" % (getUserId(), node['name'].getValue())
+    content = "<@%s> %s finished rendering on %s" % (getUserId(), node['name'].getValue(), (os.path.splitext(os.path.basename(nuke.root().name()))[0]))
 
     webhook = DiscordWebhook(url=getUserWebhook(), content=content)
     response = webhook.execute()
