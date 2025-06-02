@@ -5,7 +5,7 @@
 
 ### Installation
 
-1. Clone or Download the repo
+1. Clone or download the repo
    ```sh
    git clone https://github.com/Danb106632/NukeDiscordNotifier.git
    ```
@@ -18,7 +18,9 @@
      ```py
      nuke.pluginAddPath("NukeDiscordNotifier")
      ```
-5. Join the Discord
-   - https://discord.gg/PvBcWYnuC2
+5. Add your Discord ID and webhook 
+   - Open any script and complete the pop-up, or go to /json/DiscordNotifierSettings.json and add the information
+
+6. Enable or disable notification on Writes in the Discord tab
      
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
